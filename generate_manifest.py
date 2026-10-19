@@ -50,34 +50,3 @@ def get_latest_ffmpeg():
 
 if __name__ == "__main__":
     get_latest_ffmpeg()
-3. Create the GitHub Action:
-Create .github/workflows/update.yml:
-yaml
-name: Auto-Update Manifest
-on:
-  schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight
-  workflow_dispatch:    # Allows you to run it manually
-
-
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - name: Generate Manifest
-        run: python generate_manifest.py
-      - name: Commit and Push
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add manifest.json
-          git commit -m "Auto-update manifest to latest FFmpeg" || exit 0
-          git push
-Now your manifest is 100% automated. Once a day, GitHub fetches the newest BtbN release and updates manifest.json.
-Your app's URL will simply be:
-https://raw.githubusercontent.com/YourUsername/aifactory-updates/main/manifest.json
