@@ -8,40 +8,46 @@ API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest"
 
 
 def get_latest_ffmpeg():
-    # 1. Fetch the latest release info
+    # Fetch a list of recent releases instead of just "latest"
+    API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases"
+    print("Fetching recent releases info...")
+    
     req = urllib.request.Request(API_URL, headers={'User-Agent': 'AIFactory-Updater'})
     with urllib.request.urlopen(req) as response:
         data = json.loads(response.read().decode())
     
-    tag = data["tag_name"] # e.g., autobuild-2026-10-18-13-05
-    
-    # 2. Find the LGPL Windows zip
+    # Find the first release that actually has an "autobuild-" tag
+    tag = ""
     download_url = ""
-    for asset in data["assets"]:
-        if asset["name"].endswith("win64-lgpl.zip"):
-            download_url = asset["browser_download_url"]
-            break
-            
+    for release in data:
+        if release["tag_name"].startswith("autobuild-"):
+            tag = release["tag_name"]
+            for asset in release["assets"]:
+                if asset["name"].endswith("win64-lgpl.zip"):
+                    download_url = asset["browser_download_url"]
+                    break
+            if download_url:
+                break
+                
     if not download_url:
-        print("Error: Could not find win64-lgpl.zip in assets")
+        print("Error: Could not find autobuild win64-lgpl.zip")
         sys.exit(1)
 
+    print(f"Downloading {download_url} to calculate SHA256...")
+    zip_req = urllib.request.Request(download_url, headers={'User-Agent': 'AIFactory-Updater'})
+    with urllib.request.urlopen(zip_req) as zip_resp:
+        zip_data = zip_resp.read()
+        sha256_hash = hashlib.sha256(zip_data).hexdigest().upper()
 
-    # Note: BtbN doesn't always provide SHA256 in the API. 
-    # For now, we omit it, but the app won't auto-download until we verify it.
-    # You can add a checksum here if you download and hash it in the action.
-    
-    # 3. Build the manifest object
     manifest = {
         "schemaVersion": 1,
         "ffmpeg": {
             "version": tag,
             "url": download_url,
-            "sha256": "" # Left blank for now
+            "sha256": sha256_hash
         }
     }
     
-    # 4. Save to file
     with open("manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)
     
