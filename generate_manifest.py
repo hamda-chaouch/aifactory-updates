@@ -1,11 +1,7 @@
 import json
 import urllib.request
+import hashlib
 import sys
-
-
-# GitHub API endpoint for the latest BtbN FFmpeg release
-API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest"
-
 
 def get_latest_ffmpeg():
     # Fetch a list of recent releases instead of just "latest"
@@ -52,7 +48,6 @@ def get_latest_ffmpeg():
         json.dump(manifest, f, indent=2)
     
     print(f"Manifest updated to {tag}")
-
 
 if __name__ == "__main__":
     get_latest_ffmpeg()
