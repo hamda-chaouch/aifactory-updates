@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "ffmpeg": {
-    "version": "autobuild-2026-11-21-12-37",
-    "url": "https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-11-21-12-37/ffmpeg-N-129166-gae9f4540cb-win64-lgpl.zip",
-    "sha256": "4A365A84E0BE66214A65BD2D4406BD9FFA9C9260E20A993F385D14ED9A0A8C66"
+    "version": "autobuild-2026-11-22-12-36",
+    "url": "https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-11-22-12-36/ffmpeg-N-129219-g359c825152-win64-lgpl.zip",
+    "sha256": "EABE6D22CE20304E65DF6B702CD490CDA2CC63453761E4C2E97966489A63A95A"
   }
 }
