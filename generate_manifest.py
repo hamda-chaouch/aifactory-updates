@@ -6,7 +6,7 @@ import sys
 
 def get_latest_ffmpeg():
     # Fetch a list of recent releases instead of just "latest"
-    #API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases"
+    API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases"
     print("Fetching recent releases info...")
     
     # Get the token passed from the workflow
@@ -23,7 +23,7 @@ def get_latest_ffmpeg():
         headers['Authorization'] = f'Bearer {token}'
     
     # Create the request with the headers
-    req = urllib.request.Request("https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest", headers=headers)
+    req = urllib.request.Request(API_URL, headers=headers)
     #req = urllib.request.Request(API_URL, headers={'User-Agent': 'AIFactory-Updater'})
 
 
@@ -48,7 +48,8 @@ def get_latest_ffmpeg():
         sys.exit(1)
 
     print(f"Downloading {download_url} to calculate SHA256...")
-    zip_req = urllib.request.Request(download_url, headers={'User-Agent': 'AIFactory-Updater'})
+    #zip_req = urllib.request.Request(download_url, headers={'User-Agent': 'AIFactory-Updater'})
+    zip_req = urllib.request.Request(download_url, headers=headers)
     with urllib.request.urlopen(zip_req) as zip_resp:
         zip_data = zip_resp.read()
         sha256_hash = hashlib.sha256(zip_data).hexdigest().upper()
