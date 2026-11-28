@@ -1,14 +1,32 @@
 import json
 import urllib.request
+import os
 import hashlib
 import sys
 
 def get_latest_ffmpeg():
     # Fetch a list of recent releases instead of just "latest"
-    API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases"
+    #API_URL = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases"
     print("Fetching recent releases info...")
     
-    req = urllib.request.Request(API_URL, headers={'User-Agent': 'AIFactory-Updater'})
+    # Get the token passed from the workflow
+    token = os.environ.get("GITHUB_TOKEN")
+    
+    # Set up the headers
+    headers = {
+        'User-Agent': 'AIFactory-Updater',
+        'Accept': 'application/vnd.github.v3+json'
+    }
+    
+    # If the token exists, add the Authorization header
+    if token:
+        headers['Authorization'] = f'Bearer {token}'
+    
+    # Create the request with the headers
+    req = urllib.request.Request("https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest", headers=headers)
+    #req = urllib.request.Request(API_URL, headers={'User-Agent': 'AIFactory-Updater'})
+
+
     with urllib.request.urlopen(req) as response:
         data = json.loads(response.read().decode())
     
